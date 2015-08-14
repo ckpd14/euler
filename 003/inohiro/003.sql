@@ -1,28 +1,27 @@
-with recursive pf(counter, factor, can_divide) as (
+with recursive pf(factor, remain, can_divide) as (
     values(2, 600851475143, false)
     union all
     select
         case
-            when factor % counter = 0 then counter
-            else counter + 1
+            when remain % factor = 0 then factor
+            else factor + 1
         end
         , case
-            when factor % counter = 0 then factor / counter
-            else factor
+            when remain % factor = 0 then remain / factor
+            else remain
         end
         , case
-            when factor % counter = 0 then true
+            when remain % factor = 0 then true
             else false
         end
     from
         pf
     where
-        factor <> 1
+        remain <> 1
 )
 select
-    max(counter)
+    max(factor)
 from
     pf
 where
     can_divide = true
-;
