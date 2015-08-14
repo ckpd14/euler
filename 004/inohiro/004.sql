@@ -3,16 +3,15 @@ select
 from (
     select
         first_part
-        , array_agg(second_part[second_part_index])
-        , case
-            when first_part = array_agg(second_part[second_part_index] order by second_part_index desc) then true
+        , case when first_part = array_agg(second_part[second_part_index] order by second_part_index desc)
+            then true
             else false
         end as match
         , i
     from (
         select
-            case
-                when ary_length % 2 = 0 then ary[1:(ary_length/2)]
+            case when ary_length % 2 = 0
+                then ary[1:(ary_length/2)]
                 else ary[1:(ary_length/2)+1]
             end as first_part
             , ary[(ary_length/2)+1:ary_length] as second_part
@@ -25,7 +24,7 @@ from (
                 , array_length(regexp_split_to_array(i::varchar, 'd*'), 1) as ary_length
             from (
                 select
-                    n * m as i
+                    distinct (n * m) as i
                 from
                     (select * from generate_series(100, 999) ) s(n)
                     cross join (
